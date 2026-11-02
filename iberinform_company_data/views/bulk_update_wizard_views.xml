@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_iberinform_bulk_update_wizard_form" model="ir.ui.view">
+        <field name="name">iberinform.bulk.update.wizard.form</field>
+        <field name="model">iberinform.bulk.update.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Atualizar dados das empresas em lotes">
+                <sheet>
+                    <div class="alert alert-info" role="alert">
+                        A atualização é agendada em pequenos lotes, sem manter a página aberta.
+                        Por defeito: uma empresa a cada 15 minutos. Um erro HTTP 403 ou 429
+                        interrompe toda a fila e exige confirmação manual antes de retomar.
+                        O processamento espaçado não garante acesso: respeite as condições do fornecedor.
+                    </div>
+                    <group>
+                        <field name="batch_size"/>
+                        <field name="selected_count" readonly="1"/>
+                    </group>
+                    <div class="mb-2">
+                        <button name="action_select_all" type="object"
+                                string="Selecionar todas" class="btn-secondary me-2"/>
+                        <button name="action_deselect_all" type="object"
+                                string="Desselecionar todas" class="btn-secondary"/>
+                    </div>
+                    <field name="line_ids" nolabel="1">
+                        <list editable="bottom" create="0" delete="0">
+                            <field name="selected"/>
+                            <field name="partner_id" readonly="1" force_save="1"/>
+                            <field name="vat" readonly="1" force_save="1"/>
+                        </list>
+                    </field>
+                </sheet>
+                <footer>
+                    <button name="action_confirm" type="object" string="Criar fila de atualização"
+                            class="btn-primary"/>
+                    <button string="Cancelar" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

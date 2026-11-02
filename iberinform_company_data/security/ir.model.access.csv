@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_iberinform_bulk_update_wizard,iberinform.bulk.update.wizard,model_iberinform_bulk_update_wizard,base.group_user,1,1,1,1
+access_iberinform_bulk_update_wizard_line,iberinform.bulk.update.wizard.line,model_iberinform_bulk_update_wizard_line,base.group_user,1,1,1,1
+access_iberinform_public_snapshot_user,iberinform.public.snapshot user,model_iberinform_public_snapshot,base.group_user,1,0,0,0
+access_iberinform_public_snapshot_admin,iberinform.public.snapshot admin,model_iberinform_public_snapshot,base.group_system,1,1,1,1
+access_iberinform_bulk_job_user,iberinform.bulk.job user,model_iberinform_bulk_job,base.group_user,1,1,1,0
+access_iberinform_bulk_job_line_user,iberinform.bulk.job.line user,model_iberinform_bulk_job_line,base.group_user,1,1,1,0

@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_partner_form_iberinform" model="ir.ui.view">
+        <field name="name">res.partner.form.iberinform</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='vat']" position="after">
+                <!-- O botão ocupa uma linha própria na grelha do formulário,
+                     em vez de ficar junto ao NIF. -->
+                <div class="mt-2 mb-2" style="grid-column: 1 / -1; width: 100%;">
+                    <button name="action_get_iberinform_data"
+                            type="object"
+                            string="Obter dados públicos + SICAE"
+                            class="btn-link p-0"
+                            icon="fa-cloud-download"
+                            invisible="not is_company or not vat"/>
+                </div>
+            </xpath>
+
+            <xpath expr="//notebook" position="inside">
+                <page string="Dados públicos" name="iberinform_page" invisible="not is_company">
+                    <group string="Iberinform">
+                        <group>
+                            <field name="iberinform_last_sync"/>
+                            <field name="iberinform_url" widget="url"/>
+                            <field name="iberinform_legal_form"/>
+                            <field name="iberinform_municipality"/>
+                            <field name="iberinform_constitution_date"/>
+                        </group>
+                        <group>
+                            <field name="iberinform_cae_code"/>
+                            <field name="iberinform_cae_description"/>
+                            <field name="iberinform_sector"/>
+                            <field name="iberinform_company_size" string="Dimensão no contacto (editável)"/>
+                            <field name="iberinform_employees"/>
+                        </group>
+                        <separator string="Identificação e morada originais na Iberinform" colspan="2"/>
+                        <group>
+                            <field name="iberinform_source_name"/>
+                            <field name="iberinform_source_vat"/>
+                            <field name="iberinform_source_address"/>
+                            <field name="iberinform_source_street"/>
+                            <field name="iberinform_source_zip"/>
+                        </group>
+                        <group>
+                            <field name="iberinform_source_city"/>
+                            <field name="iberinform_source_district"/>
+                            <field name="iberinform_source_country_code"/>
+                            <field name="iberinform_source_company_size"/>
+                        </group>
+                    </group>
+
+                    <group string="CAE oficiais — SICAE">
+                        <group>
+                            <field name="sicae_last_sync"/>
+                            <field name="sicae_url" widget="url"/>
+                            <field name="sicae_cae_primary"/>
+                        </group>
+                        <group>
+                            <field name="sicae_cae_secondary" nolabel="1" placeholder="Sem CAE secundários"/>
+                        </group>
+                    </group>
+
+                    <group string="Indicadores disponíveis publicamente na Iberinform">
+                        <group>
+                            <field name="iberinform_turnover"/>
+                            <field name="iberinform_turnover_evolution"/>
+                        </group>
+                        <group>
+                            <field name="iberinform_share_capital"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+    <record id="view_partner_list_iberinform_bulk" model="ir.ui.view">
+        <field name="name">res.partner.list.iberinform.bulk</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//list" position="inside">
+                <header>
+                    <button name="action_open_iberinform_bulk_update"
+                            type="object"
+                            string="Atualizar dados públicos das empresas"
+                            class="btn-primary"
+                            display="always"
+                            icon="fa-cloud-download"/>
+                    <button name="%(action_iberinform_bulk_job_list)d"
+                            type="action"
+                            string="Histórico de atualizações em lotes"
+                            class="btn-secondary"
+                            display="always"
+                            icon="fa-history"/>
+                </header>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_res_partner_filter_iberinform_cae" model="ir.ui.view">
+        <field name="name">res.partner.search.iberinform.cae</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_res_partner_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="sicae_cae_all"
+                       string="CAE (principal ou secundário)"
+                       filter_domain="['|', '|', ('sicae_cae_primary', 'ilike', self), ('sicae_cae_secondary', 'ilike', self), ('iberinform_cae_code', 'ilike', self)]"/>
+                <field name="sicae_cae_primary"
+                       string="Só CAE principal"
+                       filter_domain="['|', ('sicae_cae_primary', 'ilike', self), ('iberinform_cae_code', 'ilike', self)]"/>
+                <field name="sicae_cae_secondary"
+                       string="Só CAE secundário"
+                       filter_domain="[('sicae_cae_secondary', 'ilike', self)]"/>
+            </xpath>
+            <xpath expr="//search" position="inside">
+                <separator/>
+                <filter name="filter_has_cae_secondary"
+                        string="Com CAE secundário"
+                        domain="[('sicae_cae_secondary', '!=', False)]"/>
+                <filter name="filter_no_sicae"
+                        string="Sem dados SICAE"
+                        domain="[('is_company', '=', True), ('sicae_last_sync', '=', False)]"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
